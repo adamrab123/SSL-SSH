@@ -15,7 +15,7 @@ class TcpServer:
         if self.kind == "server":
             self.sock.bind((self.host, self.port))
             self.sock.listen(1)
-            print("Blocked on accept")
+            print("Waiting for client connection")
             conn, addr = self.sock.accept()
             self.conn = conn
 
