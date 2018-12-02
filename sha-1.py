@@ -6,6 +6,7 @@ class SHA1:
         self.h3 = 0x10325476
         self.h4 = 0xC3D2E1F0
 
+
     def hash(self, msg):
         bit_str = self.preprocess(msg)
         chunks = self.get_chunks(bit_str)
@@ -23,7 +24,6 @@ class SHA1:
                 w[i] = self.rotate_left((w[i-3] ^ w[i-8] ^ w[i-14] ^ w[i-16]), 1)
             for i in range(32, 80):
                 w[i] = self.rotate_left((w[i-6] ^ w[i-16] ^ w[i-28] ^ w[i-32]), 2)
-            # print(w)
 
             a, b, c, d, e = self.hash_it_up(w)
 
@@ -56,11 +56,8 @@ class SHA1:
             e, d, c, b, a = d, c, self.rotate_left(b, 30), a, temp
 
         return a, b, c, d, e
-            # d = c
-            # c = b leftrotate 30
-            # b = a
-            # a = temp
             
+
     def preprocess(self, msg):
         bit_str = self.convert_to_bits(msg)
 
@@ -76,6 +73,7 @@ class SHA1:
 
         return bit_str
 
+
     def convert_to_bits(self, msg):
         bit_str = ""
         for n in range(len(msg)):
@@ -84,31 +82,12 @@ class SHA1:
 
 
     def get_chunks(self, data, size=512):
-        # return np.split(data, data.size // size)
         return [data[i:i+size] for i in range(0, len(data), size)]
+
 
     def rotate_left(self, data, n):
         return ((data << n) | (data >> (32 - n))) & 0xffffffff
 
-
-
-
 if __name__ == "__main__":
-    msg = "hello world, I am implementing the secure hash algorithm, version \
-    1 (a.k.a. SHA-1) and need at least five hundred and twelve characters to \
-    test that the chunk separation is working correctly. PLease ignore this \
-    message. Thanks. By the way that whole previous message was only two \
-    hundred and thirty five characters, so I guesssssssss I neeeeeeeeeeeeeeee\
-    eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeddddddddddddddddd wwwwaaaaaaayyyyy\
-    yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy moreee than that"
-
-    msg2 = "test"
-    msg3 = "The quick brown fox jumps over the lazy dog"
-    msg4 = "hello world"
-    # print(len(msg))
     hmac = SHA1()
-    result = hmac.hash(msg4)
-    print(result)
-
-    # print(result, " = de9f2c7fd25e1b3afad3e85a0bd17d9b100db4b3")
-    # assert(result == 0xde9f2c7fd25e1b3afad3e85a0bd17d9b100db4b3)
+    print(hmac.hash("hello world"))
