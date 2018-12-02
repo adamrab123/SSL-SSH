@@ -1,4 +1,5 @@
 from TcpServer import TcpServer
+import negotiation as neg
 
 
 
@@ -10,7 +11,13 @@ if __name__ == "__main__":
     port = 5000
     server = TcpServer(host, port)
 
-    while True:
-        data = server.receive()
-        msg = do_stuff(data)
-        server.send("hi")
+    key_exchange, cipher, hmac = neg.handshake(server, "server")
+    
+
+
+
+
+
+    # data = server.receive()
+    # msg = do_stuff(data)
+    # server.send("hi")
