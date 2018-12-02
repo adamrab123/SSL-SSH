@@ -1,4 +1,4 @@
-import random
+import secrets
 
 
 all_protocols = {
@@ -18,8 +18,8 @@ def handshake(server, role):
 
         # pick at random from the options sent by the client
         print("\nMaking random choice. Using:")
-        key_exchange = random.choice(client_protocols["key_exchange"])
-        cipher = random.choice(client_protocols["cipher"])
+        key_exchange = secrets.choice(client_protocols["key_exchange"])
+        cipher = secrets.choice(client_protocols["cipher"])
         hmac = "SHA-1"
         print("  Key Exchange: {0}\n  Cipher: {1}\n  HMAC: {2}".format(key_exchange, cipher, hmac))
 
