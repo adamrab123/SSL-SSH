@@ -1,5 +1,6 @@
 from TcpServer import TcpServer
 import negotiation as neg
+import sha1
 
 
 
