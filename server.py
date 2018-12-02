@@ -12,7 +12,7 @@ if __name__ == "__main__":
     server = TcpServer(host, port)
 
     key_exchange_algo, cipher, hmac = neg.handshake(server, "server")
-    key_exchange(server, key_exchange_algo)
+    key_exchange(server, key_exchange_algo, "server")
     
 
 
