@@ -26,7 +26,7 @@ def decrypt(encrypted, x_l):
 	r_p = pow(x_l, pow((p+1)//4,len(encrypted),p-1) ,p)
 	r_q = pow(x_l, pow((q+1)//4,len(encrypted),q-1) ,q)
 	x_0 = (r_q * p * modInverse(p,q) + r_p *q * modInverse(q,p)) % (p*q)
-	decrypted,new_x = encrypt(encrypted,x_0)
+	decrypted = encrypt(encrypted,x_0)[0]
 	return decrypted
 
 

@@ -9,5 +9,6 @@ List of things we need to do:
 2. ~~HMAC-SHA1~~
 3. RSA
 4. ECC
-5. BG
-6. 
+5. ~~BG~~
+6. Network-aspect
+
