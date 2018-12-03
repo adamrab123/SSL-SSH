@@ -1,7 +1,7 @@
 from TcpServer import TcpServer
 from negotiation import handshake
 from key_exchange import key_exchange
-from sha1 import SHA1
+from hashing import SHA1
 from ciphers import Blum, TDES
 from signature import RSA
 
