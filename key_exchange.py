@@ -1,5 +1,5 @@
 import secrets
-import ECC
+import ECCDH
 # -----------------------------------------------------------------------------
 def key_exchange(server, key_exchange, role):
 
@@ -7,9 +7,11 @@ def key_exchange(server, key_exchange, role):
     # key_exchange = "DH"
 
     if key_exchange == "DH":
-        DH(server, role)
+        session_key = DH(server, role)
     elif key_exchange == "ECC":
-        ECC(server, role)
+        session_key = ECC(server, role)
+
+    return session_key
 
 # -----------------------------------------------------------------------------
 def DH(server, role):
