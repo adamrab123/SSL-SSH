@@ -20,7 +20,7 @@ if __name__ == "__main__":
         cipher = TDES()
 
     hasher = SHA1()
-    signature = RSA()
+    signature = RSA("rsa_secrets.txt")
 
     print("\nKeys have been exchanged. Ready to receive messages.")
     print("Encrypting with {0}, hashing with {1} and signing with {2}".format(cipher_algo, signature_algo, hmac))
@@ -28,6 +28,25 @@ if __name__ == "__main__":
     while True:
         data = server.receive()
         print("Received encrypted data:", data)
+        ciphertext = data["msg"]
+        client_hash = data["hash"]
+
+        # decrypt and verify the hash
+        plaintext = cipher.decrypt(ciphertext)
+        hash_verify = hasher.hash(plaintext)
+        if hash_verify != client_hash:
+            print("Data integrity is compromised")
+        else:
+            print("Hashes match. Data integrity maintained.")
+
+        # send the response, just the reverse of the plaintext
+        ciphertext = cipher.encrypt(plaintext[::-1])
+        hashed = hasher.hash(plaintext[::-1])
+        signed_hash = signature.sign(hashed)
+        msg = {
+            "msg" : ciphertext,
+            "signature" : signed_hash
+        }
 
         # for now just return the encrypted data
-        server.send(data)
+        server.send(msg)
