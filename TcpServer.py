@@ -32,7 +32,7 @@ class TcpServer:
         elif self.kind == "client":
             self.sock.send(json.dumps(data).encode())
 
-    def receive(self, size=1024):
+    def receive(self, size=4096):
         if self.kind == "server":
             try:
                 data = self.conn.recv(size)

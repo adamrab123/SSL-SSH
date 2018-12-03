@@ -2,10 +2,6 @@ import secrets
 import ECCDH
 # -----------------------------------------------------------------------------
 def key_exchange(server, key_exchange, role):
-
-    # FOR TESTING
-    # key_exchange = "DH"
-
     if key_exchange == "DH":
         session_key = DH(server, role)
     elif key_exchange == "ECC":

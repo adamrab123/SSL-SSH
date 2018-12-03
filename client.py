@@ -10,10 +10,8 @@ if __name__ == "__main__":
     port = 5000
     server = TcpServer(host, port, "client")
 
-    # signature_verifier = RSA()
-
     # protocol handshake and key exchange
-    key_exchange_algo, cipher_algo, signature_algo, hmac = handshake(server, "client")
+    key_exchange_algo, cipher_algo, signature_algo, hmac, signature_verifier = handshake(server, "client")
     session_key = key_exchange(server, key_exchange_algo, "client")
     bin_session_key = bin(session_key)[2:]
     keys = []
@@ -52,5 +50,10 @@ if __name__ == "__main__":
         print("Decrypting and verifying signature...")
         response = cipher.decrypt(ciphertext)
         print("Server Response:", response)
+        print("Decrypting server signature...")
+        if signature_verifier.verify(response, signature):
+            print("Server signature verified.")
+        else:
+            print("Failed to verify server signature.")
 
         plaintext = input("--> ")

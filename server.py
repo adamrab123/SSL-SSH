@@ -11,10 +11,10 @@ if __name__ == "__main__":
     server = TcpServer(host, port)
 
     # generate signatures to verify the server to the client    
-    signature = RSA("rsa_secrets.txt")
+    signature = RSA(secrets_file="rsa_secrets.txt")
 
     # protocol handshake and key exchange
-    key_exchange_algo, cipher_algo, signature_algo, hmac = handshake(server, "server")
+    key_exchange_algo, cipher_algo, signature_algo, hmac = handshake(server, "server", signer_object=signature)
     session_key = key_exchange(server, key_exchange_algo, "server")
     bin_session_key = bin(session_key)[2:]
     keys = []
