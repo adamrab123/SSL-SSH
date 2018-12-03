@@ -67,6 +67,7 @@ def handshake(server, role, signer_object=None):
         if signature_verifier.verify(rand, signed):
             print("Signature from server is verified. Communication can continue.")
         else:
-            print("Signature verification failed")
+            print("Signature verification failed.")
+            exit()
 
         return key_exchange, cipher, signature, hmac, signature_verifier

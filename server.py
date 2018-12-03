@@ -45,7 +45,8 @@ if __name__ == "__main__":
         hash_verify = hmac_generator.compute(plaintext)
         print("Computing HMAC...", hash_verify)
         if hash_verify != client_hash:
-            print("Data integrity is compromised")
+            print("Hashes do not match. Data integrity is compromised. Closing connection.")
+            exit()
         else:
             print("Hashes match. Data integrity maintained.")
 
