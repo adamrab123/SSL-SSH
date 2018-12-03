@@ -25,7 +25,7 @@ Then, run the client:
 ```bash
 python client.py
 ```
-This launch a TCP socket and attempt to establish a connection with the server. If successful, the client will initiate the handshake protocol by sending a dictionary with all protocols to the server:
+This launches a TCP socket and attempt to establish a connection with the server. If successful, the client will initiate the handshake protocol by sending a dictionary with all protocols to the server:
 ```python
 all_protocols = {
     "key_exchange" : ["DH", "ECC"],
@@ -43,9 +43,45 @@ RSA: e and phi are not co-prime. Re-rolling.
 RSA: e and phi are not co-prime. Re-rolling.
 ```
 
+The client receives the response from the server containing the server's choices from the cipher suite as well as the signed value and the public key for the RSA signature. The client can then verify the server's signature, and outputs an appropriate message if successful:
+```
+Verifying server signature...
+Signature from server is verified. Communication can continue.
+```
+If unsuccessful, the connection is closed and the program is terminated.
+Once the server is verified and the handshake is complete, the key exchange protocol is run. For both cases, large random numbers (1024-bit for Diffie-Hellman and 256-bit for ECC) are generated for both the client and server and the appropriate information is exchanged. The server outputs its public key to get a sense of how large the numbers are. Server:
+```
+Running Diffie-Hellman Key Exchange
+Generated a private key and an exchange key. Sending exchange key to client
+Exchange key: 51049796633367923878763089559096334560268338561585619906085487212790084424194514949783484478082797869615392349018071417165546988026519653596614719083399776779745744944150799235903692362437998737922379706854506457315094571494407589026251070433200425973844527419089377011978421223849006009887245773506707502599
+```
 
-To run:
+A secure communication channel is now set up, and the server has been verified through blind signature. Messages can now be securely exchanged. A prompt will appear in the client terminal, where the user can enter what message they want to send to the server:
+```
+Keys have been exchanged. Ready to send messages.
+Encrypting with TDES, hashing with SHA-1, and verifying signature with RSA
 
+-->
+```
 
+Upon entering a message, the HMAC is computed, the message is encrypted, and both are sent to the server.
+Client:
+```
+--> hello
+Computed HMAC: febb7a15ab5eb1fbdadb6b51f7ce515fdba61a9e
+Encrypted: 0001000111100100010100110100001100110110110110111100110101101001
+Sending ciphertext and HMAC to the server
+```
+Upon receiving the message, the server decrypts the message, computes the HMAC of the plaintext and compares it to the HMAC sent from the client. If they are not equal, the program is terminated. If they are, then the server reverses the plaintext, computes the hash, encrypts the plaintext and sends the cipher text and hash to the client, where the client follows the same procedure.
+Server:
+```
+Received encrypted msg: 0001000111100100010100110100001100110110110110111100110101101001
+Client HMAC: febb7a15ab5eb1fbdadb6b51f7ce515fdba61a9e
+Decrypting...
+Plaintext from client: hello
+Computing HMAC... febb7a15ab5eb1fbdadb6b51f7ce515fdba61a9e
+Hashes match. Data integrity maintained.
+Reversing the plaintext and echoing to client
+```
 
 Project writeup: https://docs.google.com/document/d/1p7xu87DeFxT94hb90uiroPHekZe1nagRAS--X8ujVkk/edit?usp=sharing
