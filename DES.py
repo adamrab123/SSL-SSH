@@ -42,7 +42,7 @@ def f(m,k):
 		boxes_result[4*x:4*(x+1)] = s_box(x, e_xor[x*6:(x+1)*6])
 	return boxes_result[P]
 
-def apply(m,k, encrypt):
+def apply_DES(m,k, encrypt):
 	keys_permuted = k[PC_1]
 	rotation_blocks = np.zeros((17,2,28), dtype=np.uint8)
 	rotation_blocks[0] =  np.stack([keys_permuted[:28],keys_permuted[28:]])
@@ -67,12 +67,12 @@ def apply(m,k, encrypt):
 	return almost_final[IP_1]
 
 
-
-k = to_bits(K,64)
-m = to_bits(M,64)
-result = apply(m,k, True)
-int_result = to_int(result)
-print(hex(int_result))
-decrypted = apply(result,k,False)
-int_decrypted = to_int(decrypted)
-print(hex(int_decrypted))
+if __name__ == "__main__":
+	k = to_bits(K,64)
+	m = to_bits(M,64)
+	result = apply_DES(m,k, True)
+	int_result = to_int(result)
+	print(hex(int_result))
+	decrypted = apply_DES(result,k,False)
+	int_decrypted = to_int(decrypted)
+	print(hex(int_decrypted))

@@ -1,5 +1,5 @@
 import secrets
-
+import ECC
 # -----------------------------------------------------------------------------
 def key_exchange(server, key_exchange, role):
 
@@ -36,7 +36,29 @@ def DH(server, role):
 
     session_key = pow(received_key, a, p)
     print("Determined session key:", session_key)
+    return session_key
 
 # -----------------------------------------------------------------------------
 def ECC(server, role):
     print("Running ECC Key Exchange")
+    d = secrets.randbelow(ECCDH.n)
+    public_key = ECCDH.generate_public_key(d)
+    if role == "server":
+        print("Generated a private key and an exchange key. Sending exchange key to client")
+        print("Generated key:", public_key)
+        print("Sending to client")
+        server.send(public_key)
+
+        # get response from client and generate session key
+        received_key = server.receive()
+
+    elif role == "client":
+        received_key = server.receive()
+        print("Received public key from server. Generating private key")
+        print("Received:", received_key)
+
+        server.send(public_key)
+
+    session_key = ECCDH.get_secret(received_key,d)
+    print("Determined session key:", session_key)
+    return session_key

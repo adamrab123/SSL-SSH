@@ -1,3 +1,5 @@
+import DES
+import numpy as np
 # General Use -----------------------------------------------------------------
 def modInverse(a, m) : 
     m0 = m 
@@ -65,15 +67,27 @@ class Blum:
 
 # Triple DES ------------------------------------------------------------------
 class TDES:
-    def __init__(self):
-        pass
+    def __init__(self, k1, k2, k3):
+        self.k1 = DES.to_bits(k1,64)
+        self.k2 = DES.to_bits(k2,64)
+        self.k3 = DES.to_bits(k3,64)
 
 
     def encrypt(self, plaintext):
-        pass
+        to_encrypt = np.unpackbits(bytearray(plaintext,'utf_8'))
+        to_encrypt = np.pad(to_encrypt, pad_width=(64-(len(to_encrypt) % 64), 0), mode='constant').reshape(-1,64)
+        encrypted_once = np.apply_along_axis(DES.apply_DES, 1, to_encrypt, self.k1,True).astype(np.uint8)
+        encrypted_twice = np.apply_along_axis(DES.apply_DES, 1, encrypted_once, self.k2,False).astype(np.uint8)
+        encrypted_thrice = np.apply_along_axis(DES.apply_DES, 1, encrypted_twice, self.k3,True).astype(np.uint8)
+        return "".join(encrypted_thrice.flatten().astype(str).tolist())
 
     def decrypt(self, ciphertext):
-        pass
+        to_decrypt = np.array(list(ciphertext)).reshape(-1,64).astype(np.uint8)
+        decrypted_once = np.apply_along_axis(DES.apply_DES, 1, to_decrypt, self.k3,False).astype(np.uint8)
+        decrypted_twice = np.apply_along_axis(DES.apply_DES, 1, decrypted_once, self.k2,True).astype(np.uint8)
+        decrypted_thrice = np.apply_along_axis(DES.apply_DES, 1, decrypted_twice, self.k1,False).astype(np.uint8)
+        packed = np.packbits(decrypted_thrice);
+        return "".join([chr(item) for item in packed]).replace("\x00","")
 
 
 # ignore ======================================================================
