@@ -1,5 +1,6 @@
 import secrets
 from math import gcd
+from ciphers import modInverse
 
 class RSA:
     def __init__(self, secrets_file):
@@ -21,7 +22,7 @@ class RSA:
             while (gcd(self.e, self.phi_n) != 1):
                 print("Re-rolling")
                 self.e = secrets.randbelow(self.phi_n)
-
+            self.d = modInverse(self.e, self.phi_n)
 
     def sign(self):
         pass
