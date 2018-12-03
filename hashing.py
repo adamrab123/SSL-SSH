@@ -95,14 +95,14 @@ class HMAC:
         self.hasher = SHA1()
     def compute(self,message):
 
-        if len(key) < 64:
-            key = key + [chr(0)] * (64-len(key))
+        if len(self.key) < 64:
+            self.key = self.key + chr(0) * (64-len(self.key))
         o_key_pad = ""
         i_key_pad = ""
         for i in range(64):
-            o_key_pad.append(chr( ord(key[i]) ^ 0x5c ))
-            i_key_pad.append(chr( ord(key[i]) ^ 0x36 ))
-        return hasher.hash(o_key_pad + hash(i_key_pad + message))
+            o_key_pad+= chr( ord(self.key[i]) ^ 0x5c )
+            i_key_pad+= chr( ord(self.key[i]) ^ 0x36 )
+        return self.hasher.hash(o_key_pad + self.hasher.hash(i_key_pad + message))
 
 
 
