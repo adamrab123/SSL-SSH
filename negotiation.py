@@ -6,7 +6,7 @@ all_protocols = {
     "cipher" : ["TDES"],
     "signature" : "RSA",
     "HMAC" : "SHA-1",
-    "random_value" : "verify_this"
+    "random_value" : None
 }
 
 def handshake(server, role, signer_object=None):
@@ -27,7 +27,7 @@ def handshake(server, role, signer_object=None):
         hmac = client_protocols["HMAC"]
         random_value = client_protocols["random_value"]
         print("  Key Exchange: {0}\n  Cipher: {1}\n  Signature: {2}\n  HMAC: {3}".format(key_exchange, cipher, signature, hmac))
-
+        print("Signed client value. Sending public signature key and protocol choice.")
         msg = {
             "key_exchange" : key_exchange,
             "cipher" : cipher,
@@ -37,16 +37,21 @@ def handshake(server, role, signer_object=None):
             "N" : signer_object.N,
             "signed" : signer_object.sign(client_protocols["random_value"])
         }
-
-        print("Sending:", msg)
         server.send(msg)
 
         return key_exchange, cipher, signature, hmac
 
 
     elif role == "client":
+        # generate random value for server to sign
+        rand = str(secrets.randbelow(10000000))
+        all_protocols["random_value"] = rand
+        print("Generating random value for server to sign:", rand)
+
         print("Sending Cipher Suite to server. Awaiting response.")
         server.send(all_protocols)
+
+        # unpack response
         protocol = server.receive()
         key_exchange = protocol["key_exchange"]
         cipher = protocol["cipher"]
@@ -55,11 +60,11 @@ def handshake(server, role, signer_object=None):
         print("Received server choice. Using:")
         print("  Key Exchange: {0}\n  Cipher: {1}\n  Signature: {2}\n  HMAC: {3}".format(key_exchange, cipher, signature, hmac))
 
+        # verify signature
         signed = protocol["signed"]
         signature_verifier = RSA(e=protocol["e"], N=protocol["N"])
-
-        print("Decrypting server signature...")
-        if signature_verifier.verify(all_protocols["random_value"], signed):
+        print("\nVerifying server signature...")
+        if signature_verifier.verify(rand, signed):
             print("Signature from server is verified. Communication can continue.")
         else:
             print("Signature verification failed")

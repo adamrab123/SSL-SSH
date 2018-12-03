@@ -40,6 +40,5 @@ class RSA:
     def verify(self, message, signature):
         hashed = self.hasher.hash(message)
         decrypted = pow(signature, self.e, self.N)
-        print(decrypted)
         hashed_int = int(hashed,16)
         return (hashed_int == decrypted)

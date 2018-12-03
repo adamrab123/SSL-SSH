@@ -30,37 +30,36 @@ def modInverse(a, m) :
   
     return x 
 
-# Blum-Goldwasser -------------------------------------------------------------
 
+# # Blum-Goldwasser -------------------------------------------------------------
+# # THIS IS BROKEN
 
-# THIS IS BROKEN
+# class Blum:
+#     def __init__(self):
+#         self.X = 0
+#         self.M = 0
+#         self.p = 65147
+#         self.q = 78311
+#         self.x0 = 159201
 
-class Blum:
-    def __init__(self):
-        self.X = 0
-        self.M = 0
-        self.p = 65147
-        self.q = 78311
-        self.x0 = 159201
+#     def getBit(self):
+#         bit = self.X % 2
+#         self.X = pow(self.X,2,self.M)
+#         return bit
 
-    def getBit(self):
-        bit = self.X % 2
-        self.X = pow(self.X,2,self.M)
-        return bit
+#     def encrypt(self, plaintext):
+#         pass
+#     	# blum = Blum(p* q, x0)
+#     	# new = [blum.getBit() ^ bit for bit in message]
+#     	# return new, blum.X
 
-    def encrypt(self, plaintext):
-        pass
-    	# blum = Blum(p* q, x0)
-    	# new = [blum.getBit() ^ bit for bit in message]
-    	# return new, blum.X
-
-    def decrypt(self, ciphertext):
-        pass
-    	# r_p = pow(x_l, pow((p+1)//4,len(encrypted),p-1) ,p)
-    	# r_q = pow(x_l, pow((q+1)//4,len(encrypted),q-1) ,q)
-    	# x_0 = (r_q * p * modInverse(p,q) + r_p *q * modInverse(q,p)) % (p*q)
-    	# decrypted = encrypt(encrypted,x_0)[0]
-    	# return decrypted
+#     def decrypt(self, ciphertext):
+#         pass
+#     	# r_p = pow(x_l, pow((p+1)//4,len(encrypted),p-1) ,p)
+#     	# r_q = pow(x_l, pow((q+1)//4,len(encrypted),q-1) ,q)
+#     	# x_0 = (r_q * p * modInverse(p,q) + r_p *q * modInverse(q,p)) % (p*q)
+#     	# decrypted = encrypt(encrypted,x_0)[0]
+#     	# return decrypted
 
 
 

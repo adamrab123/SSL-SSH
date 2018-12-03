@@ -2,7 +2,7 @@ from TcpServer import TcpServer
 from negotiation import handshake
 from key_exchange import key_exchange
 from hashing import HMAC
-from ciphers import Blum, TDES
+from ciphers import TDES
 from signature import RSA
 
 if __name__ == "__main__":
@@ -28,7 +28,7 @@ if __name__ == "__main__":
     print("Encrypting with {0}, hashing with {1}, and verifying signature with {2}\n".format(cipher_algo, hmac, signature_algo))
 
     plaintext = input("--> ")
-    while plaintext != "quit" or plaintext != "exit" or plaintext != "q":
+    while plaintext != "quit\n" or plaintext != "exit\n" or plaintext != "q\n":
 
         # encrypt and hash the message, send to server
         hashed = hmac_generator.compute(plaintext)
@@ -44,16 +44,18 @@ if __name__ == "__main__":
 
         # receive server response
         data = server.receive()
-        ciphertext, signature = data["msg"], data["signature"]
+        ciphertext, server_hash = data["msg"], data["hash"]
         print("Received encrypted msg:", ciphertext)
-        print("Server signature:", signature)
-        print("Decrypting and verifying signature...")
+        print("Server HMAC:", server_hash)
+        print("Decrypting...")
         response = cipher.decrypt(ciphertext)
         print("Server Response:", response)
-        print("Decrypting server signature...")
-        if signature_verifier.verify(response, signature):
-            print("Server signature verified.")
+        hash_verify = hmac_generator.compute(response)
+        print("Computing HMAC...", hash_verify)
+        if hash_verify != server_hash:
+            print("Hashes do not match. Data integrity is compromised.")
         else:
-            print("Failed to verify server signature.")
+            print("Hashes match. Data integrity maintained.")
 
-        plaintext = input("--> ")
+        # send another message
+        plaintext = input("\n--> ")

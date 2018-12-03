@@ -2,7 +2,7 @@ from TcpServer import TcpServer
 from negotiation import handshake
 from key_exchange import key_exchange
 from hashing import HMAC
-from ciphers import Blum, TDES
+from ciphers import TDES
 from signature import RSA
 
 if __name__ == "__main__":
@@ -53,9 +53,9 @@ if __name__ == "__main__":
         print("Reversing the plaintext and echoing to client\n")
         ciphertext = cipher.encrypt(plaintext[::-1])
         hashed = hmac_generator.compute(plaintext[::-1])
-        signed_hash = signature.sign(hashed)
+        # signed_hash = signature.sign(hashed)
         msg = {
             "msg" : ciphertext,
-            "signature" : signed_hash
+            "hash" : hashed
         }
         server.send(msg)

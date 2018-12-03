@@ -1,8 +1,6 @@
 import socket
 import json
 
-
-
 class TcpServer:
     def __init__(self, host, port, kind="server"):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
