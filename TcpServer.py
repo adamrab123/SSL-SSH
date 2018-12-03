@@ -42,19 +42,3 @@ class TcpServer:
             except socket.error:
                 return None
         return json.loads(data.decode())
-
-
-
-# Ignore
-if __name__ == "__main__":
-    # run tests on the UDP server object
-    host = "127.0.0.1"
-    port = 5000
-
-    server = TcpServer(host, port)
-
-    # example
-    while True:
-        data = server.receive()
-        msg = do_stuff(data)
-        server.send(msg)
