@@ -93,7 +93,7 @@ class HMAC:
     def __init__(self,key):
         self.key = key
         self.hasher = SHA1()
-    def compute(message):
+    def compute(self,message):
 
         if len(key) < 64:
             key = key + [chr(0)] * (64-len(key))
