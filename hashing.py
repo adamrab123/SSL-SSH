@@ -11,6 +11,8 @@ class SHA1:
         bit_str = self.preprocess(msg)
         chunks = self.get_chunks(bit_str)
 
+        h0, h1, h2, h3, h4 = self.h0, self.h1, self.h2, self.h3, self.h4
+
         for chunk in chunks:
             # separate 512 bit chunk into 32-bit words
             words = self.get_chunks(chunk, 32)
@@ -25,19 +27,19 @@ class SHA1:
             for i in range(32, 80):
                 w[i] = self.rotate_left((w[i-6] ^ w[i-16] ^ w[i-28] ^ w[i-32]), 2)
 
-            a, b, c, d, e = self.hash_it_up(w)
+            a, b, c, d, e = self.hash_it_up(w, h0, h1, h2, h3, h4)
 
-            self.h0 = self.h0 + a & 0xffffffff
-            self.h1 = self.h1 + b & 0xffffffff
-            self.h2 = self.h2 + c & 0xffffffff
-            self.h3 = self.h3 + d & 0xffffffff
-            self.h4 = self.h4 + e & 0xffffffff
+            h0 = h0 + a & 0xffffffff
+            h1 = h1 + b & 0xffffffff
+            h2 = h2 + c & 0xffffffff
+            h3 = h3 + d & 0xffffffff
+            h4 = h4 + e & 0xffffffff
 
-        return "%08x%08x%08x%08x%08x" % (self.h0, self.h1, self.h2, self.h3, self.h4)
+        return "%08x%08x%08x%08x%08x" % (h0, h1, h2, h3, h4)
 
 
-    def hash_it_up(self, w):
-        a, b, c, d, e = self.h0, self.h1, self.h2, self.h3, self.h4
+    def hash_it_up(self, w, h0, h1, h2, h3, h4):
+        a, b, c, d, e = h0, h1, h2, h3, h4
         for i in range(80):
             if i <= 19:
                 f = (b & c) | ((~b) & d)
