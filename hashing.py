@@ -88,6 +88,24 @@ class SHA1:
     def rotate_left(self, data, n):
         return ((data << n) | (data >> (32 - n))) & 0xffffffff
 
+
+class HMAC:
+    def __init__(self,key):
+        self.key = key
+        self.hasher = SHA1()
+    def compute(message):
+
+        if len(key) < 64:
+            key = key + [chr(0)] * (64-len(key))
+        o_key_pad = ""
+        i_key_pad = ""
+        for i in range(64):
+            o_key_pad.append(chr( ord(key[i]) ^ 0x5c ))
+            i_key_pad.append(chr( ord(key[i]) ^ 0x36 ))
+        return hasher.hash(o_key_pad + hash(i_key_pad + message))
+
+
+
 if __name__ == "__main__":
     hmac = SHA1()
     print(hmac.hash("hello world"))
