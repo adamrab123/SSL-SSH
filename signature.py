@@ -27,13 +27,13 @@ class RSA:
             self.d = modInverse(self.e, self.phi_n)
 
     def sign(self,message):
-        hashed = hasher.hash(message)
+        hashed = self.hasher.hash(message)
         hashed_int = int(hashed,16)
         signed = pow(hashed_int,self.d,self.N)
         return signed
 
     def verify(self,message, signature):
-        hashed = hasher.hash(message)
+        hashed = self.hasher.hash(message)
         decrypted = pow(signature,self.e,self.N)
         hashed_int = int(hashed,16)
         return (hashed_int == decrypted)
