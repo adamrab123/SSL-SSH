@@ -12,3 +12,4 @@ List of things we need to do:
 5. ~~BG~~
 6. Network-aspect
 
+Project writeup: https://docs.google.com/document/d/1p7xu87DeFxT94hb90uiroPHekZe1nagRAS--X8ujVkk/edit?usp=sharing

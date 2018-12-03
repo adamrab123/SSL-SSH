@@ -10,7 +10,7 @@ class Blum:
 		self.X = pow(self.X,2,self.M)
 		return bit
 
-def modInverse(a, m) : 
+def modInverse(a, m) :
     a = a % m
     for x in range(1, m) : 
         if ((a * x) % m == 1) : 
