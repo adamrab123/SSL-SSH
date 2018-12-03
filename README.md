@@ -84,4 +84,4 @@ Hashes match. Data integrity maintained.
 Reversing the plaintext and echoing to client
 ```
 
-Project writeup: https://docs.google.com/document/d/1p7xu87DeFxT94hb90uiroPHekZe1nagRAS--X8ujVkk/edit?usp=sharing
+Project writeup (we opted to create one longer writeup to not bore the graders with the same writeup 3 times over): https://docs.google.com/document/d/1p7xu87DeFxT94hb90uiroPHekZe1nagRAS--X8ujVkk/edit?usp=sharing
