@@ -1,21 +1,24 @@
-p = 65147
-q = 78311
-my_x0 = 159201
-class Blum:
-	def __init__(self,m,x):
-		self.X = x
-		self.M = m
-	def getBit(self):
-		bit = self.X % 2
-		self.X = pow(self.X,2,self.M)
-		return bit
-
+# General Use -----------------------------------------------------------------
 def modInverse(a, m) :
     a = a % m
     for x in range(1, m) : 
         if ((a * x) % m == 1) : 
             return x 
     return 1
+
+# Blum-Goldwasser -------------------------------------------------------------
+p = 65147
+q = 78311
+my_x0 = 159201
+
+class Blum:
+    def __init__(self,m,x):
+        self.X = x
+        self.M = m
+    def getBit(self):
+        bit = self.X % 2
+        self.X = pow(self.X,2,self.M)
+        return bit
 
 def encrypt(message, x0):
 	blum = Blum(p* q, x0)
@@ -30,11 +33,21 @@ def decrypt(encrypted, x_l):
 	return decrypted
 
 
-input = [1,0,0,1,1,1,0,0,0,0,0,1,0,0,0,0,1,1,0,0]
-print(input)
-encrypted, x_l = encrypt(input, my_x0)
-print(encrypted)
-decrypted = decrypt(encrypted, x_l)
-print(decrypted)
-assert(decrypted == input)
-# print(p * a + b * q)
+
+
+# Triple DES ------------------------------------------------------------------
+class TDES:
+    def __init__(self):
+        pass
+
+
+# ignore ======================================================================
+if __name__ == "__main__":
+    input = [1,0,0,1,1,1,0,0,0,0,0,1,0,0,0,0,1,1,0,0]
+    print(input)
+    encrypted, x_l = encrypt(input, my_x0)
+    print(encrypted)
+    decrypted = decrypt(encrypted, x_l)
+    print(decrypted)
+    assert(decrypted == input)
+    # print(p * a + b * q)
