@@ -22,7 +22,7 @@ class RSA:
             self.phi_n = (self.p - 1) * (self.q - 1)
             self.e = secrets.randbelow(self.phi_n)
             while (gcd(self.e, self.phi_n) != 1):
-                print("Re-rolling")
+                print("RSA: e and phi are not co-prime. Re-rolling.")
                 self.e = secrets.randbelow(self.phi_n)
             self.d = modInverse(self.e, self.phi_n)
 
