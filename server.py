@@ -10,47 +10,47 @@ if __name__ == "__main__":
     port = 5000
     server = TcpServer(host, port)
 
+    # generate signatures to verify the server to the client    
+    signature = RSA("rsa_secrets.txt")
+
+    # protocol handshake and key exchange
     key_exchange_algo, cipher_algo, signature_algo, hmac = handshake(server, "server")
     session_key = key_exchange(server, key_exchange_algo, "server")
     bin_session_key = bin(session_key)[2:]
     keys = []
     for i in range(0, 256, 64):
         keys.append(int(bin_session_key[i:i+64], 2))
-    print(keys)
 
-
-
-
-
-    # get helper objects for encryption, hashing, and signature
-    # if cipher_algo == "BG":
-    #     cipher = Blum()
-    cipher_algo = "TDES"
+    # get helper objects for encryption and hmac
     if cipher_algo == "TDES":
         cipher = TDES(keys[0], keys[1], keys[2])
     hmac_generator = HMAC(str(keys[3]))
 
-    signature = RSA("rsa_secrets.txt")
-
+    # ready for secure communication
     print("\nKeys have been exchanged. Ready to receive messages.")
-    print("Encrypting with {0}, hashing with {1} and signing with {2}".format(cipher_algo, signature_algo, hmac))
+    print("Encrypting with {0}, hashing with {1}, and signing with {2}\n".format(cipher_algo, hmac, signature_algo))
 
     while True:
+
+        # receive a message from the client
         data = server.receive()
-        print("Received encrypted data:", data)
-        ciphertext = data["msg"]
-        client_hash = data["hash"]
+        ciphertext, client_hash = data["msg"], data["hash"]
+        print("Received encrypted msg:", ciphertext)
+        print("Client HMAC:", client_hash)
+        print("Decrypting...")
 
         # decrypt and verify the hash
         plaintext = cipher.decrypt(ciphertext)
         print("Plaintext from client:", plaintext)
         hash_verify = hmac_generator.compute(plaintext)
+        print("Computing HMAC...", hash_verify)
         if hash_verify != client_hash:
             print("Data integrity is compromised")
         else:
             print("Hashes match. Data integrity maintained.")
 
         # send the response, just the reverse of the plaintext
+        print("Reversing the plaintext and echoing to client\n")
         ciphertext = cipher.encrypt(plaintext[::-1])
         hashed = hmac_generator.compute(plaintext[::-1])
         signed_hash = signature.sign(hashed)
@@ -58,6 +58,4 @@ if __name__ == "__main__":
             "msg" : ciphertext,
             "signature" : signed_hash
         }
-
-        # for now just return the encrypted data
         server.send(msg)

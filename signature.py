@@ -4,17 +4,22 @@ from ciphers import modInverse
 from hashing import SHA1
 
 class RSA:
-    def __init__(self, secrets_file):
+    def __init__(self, secrets_file, e=0, N=0):
         self.p = 0
         self.q = 0
-        self.N = 0
-        self.e = 0
+        self.N = N
+        self.e = e
         self.d = 0
         self.phi_n = 0
-        self.keygen(secrets_file)
-        self.hasher = SHA1()
+
+        # gen keys if needed, else we are only using this to verify
+        # signatures form the server
+        if self.e == 0 and self.N == 0:
+            self.keygen(secrets_file)
+            self.hasher = SHA1()
 
     def keygen(self, secrets_file):
+        print("\nRunning key generation for RSA.")
         with open(secrets_file) as f:
             self.p = int(f.readline())
             self.q = int(f.readline())

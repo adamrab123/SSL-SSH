@@ -3,7 +3,7 @@ import secrets
 
 all_protocols = {
     "key_exchange" : ["DH", "ECC"],
-    "cipher" : ["BG", "TDES"],
+    "cipher" : ["TDES"],
     "signature" : "RSA",
     "HMAC" : "SHA-1"
 }
@@ -11,7 +11,7 @@ all_protocols = {
 def handshake(server, role):
     if role == "server":
         client_protocols = server.receive()
-        print("Received Cipher Suite from client\n  Key exchange protocols: ", end="")
+        print("\nReceived Cipher Suite from client\n  Key exchange protocols: ", end="")
         for kep in client_protocols["key_exchange"]: print(kep, end=" ")
         print("\n  Ciphers: ", end="")
         for c in client_protocols["cipher"]: print(c, end=" ")

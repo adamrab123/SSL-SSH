@@ -22,8 +22,7 @@ def DH(server, role):
     public_key = pow(g, a, p)
     if role == "server":
         print("Generated a private key and an exchange key. Sending exchange key to client")
-        print("Generated key:", public_key)
-        print("Sending to client")
+        print("Exchange key:", public_key)
         server.send(public_key)
 
         # get response from client and generate session key
@@ -37,18 +36,16 @@ def DH(server, role):
         server.send(public_key)
 
     session_key = pow(received_key, a, p)
-    print("Determined session key:", session_key)
     return session_key
 
 # -----------------------------------------------------------------------------
 def ECC(server, role):
-    print("Running ECC Key Exchange")
+    print("\nRunning ECC Key Exchange")
     d = secrets.randbelow(ECCDH.n)
     public_key = ECCDH.generate_public_key(d)
     if role == "server":
         print("Generated a private key and an exchange key. Sending exchange key to client")
-        print("Generated key:", public_key)
-        print("Sending to client")
+        print("Exchange key:", public_key)
         server.send(public_key)
 
         # get response from client and generate session key
@@ -56,11 +53,10 @@ def ECC(server, role):
 
     elif role == "client":
         received_key = server.receive()
-        print("Received public key from server. Generating private key")
-        print("Received:", received_key)
+        print("Received public key from server. Generating private key.")
+        print("Received (should match the exchange key output by server):", received_key)
 
         server.send(public_key)
 
     session_key = ECCDH.get_secret(received_key,d)
-    print("Determined session key:", session_key)
     return session_key
